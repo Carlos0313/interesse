@@ -17,8 +17,11 @@
 <body>
     <div class="container p-4">
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-sm-12 col-md-8 col-lg-10">
                 <div class="h1">Control de Eventos</div>
+            </div>
+            <div class="col-sm-12 col-md-4 col-lg-2 d-flex justify-content-start align-items-center">
+                <button class="btn btn-primary" onclick="useModal('formNewEvent')">Nuevo Evento</button>
             </div>
             <hr class="border border-secondary border-1 opacity-50">
         </div>
@@ -45,13 +48,13 @@
                         <td>12</td>
                         <td>
                             <div class="btn-group" role="group" aria-label="Default button group">
-                                <button type="button" class="btn btn-outline-secondary" title="Codigo QR" onclick="useModal()">
+                                <button type="button" class="btn btn-outline-secondary" title="Codigo QR" onclick="useModal('qr')">
                                     <i class="fa-solid fa-qrcode"></i>
                                 </button>
-                                <button type="button" class="btn btn-outline-secondary" title="Detalles Eventos" onclick="useModal()">
+                                <button type="button" class="btn btn-outline-secondary" title="Detalles Eventos" onclick="useModal('event',1)">
                                     <i class="fa-solid fa-calendar-days"></i>
                                 </button>
-                                <button type="button" class="btn btn-outline-secondary" title="Participantes" onclick="useModal()">
+                                <button type="button" class="btn btn-outline-secondary" title="Participantes" onclick="useModal('guests',1,1)">
                                     <i class="fa-solid fa-users"></i>
                                 </button>
                             </div>
@@ -65,13 +68,13 @@
                         <td>3</td>
                         <td>
                             <div class="btn-group" role="group" aria-label="Default button group">
-                                <button type="button" class="btn btn-outline-secondary" title="Codigo QR">
+                                <button type="button" class="btn btn-outline-secondary" title="Codigo QR" onclick="useModal('qr')">
                                     <i class="fa-solid fa-qrcode"></i>
                                 </button>
-                                <button type="button" class="btn btn-outline-secondary" title="Detalles Eventos">
+                                <button type="button" class="btn btn-outline-secondary" title="Detalles Eventos" onclick="useModal('event',2)">
                                     <i class="fa-solid fa-calendar-days"></i>
                                 </button>
-                                <button type="button" class="btn btn-outline-secondary" title="Participantes">
+                                <button type="button" class="btn btn-outline-secondary" title="Participantes" onclick="useModal('guests',2,2)">
                                     <i class="fa-solid fa-users"></i>
                                 </button>
                             </div>
@@ -85,13 +88,13 @@
                         <td>21</td>
                         <td>
                             <div class="btn-group" role="group" aria-label="Default button group">
-                                <button type="button" class="btn btn-outline-secondary" title="Codigo QR">
+                                <button type="button" class="btn btn-outline-secondary" title="Codigo QR" onclick="useModal('qr')">
                                     <i class="fa-solid fa-qrcode"></i>
                                 </button>
-                                <button type="button" class="btn btn-outline-secondary" title="Detalles Eventos">
+                                <button type="button" class="btn btn-outline-secondary" title="Detalles Eventos" onclick="useModal('event', 3)">
                                     <i class="fa-solid fa-calendar-days"></i>
                                 </button>
-                                <button type="button" class="btn btn-outline-secondary" title="Participantes">
+                                <button type="button" class="btn btn-outline-secondary" title="Participantes" onclick="useModal('guests', 3, 3)">
                                     <i class="fa-solid fa-users"></i>
                                 </button>
                             </div>
@@ -111,13 +114,13 @@
                     <h1 class="modal-title fs-5" id="staticBackdropLabel">Titulo Modal</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" id="modalBody">
                     
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary">Guardar Cambios</button>
-                </div>
+                {{-- <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><i class="fa-regular fa-rectangle-xmark"></i> Cerrar</button>
+                    <button type="button" class="btn btn-success"><i class="fa-regular fa-floppy-disk"></i> Guardar Cambios</button>
+                </div> --}}
             </div>
         </div>
     </div>
