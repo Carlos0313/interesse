@@ -80,7 +80,7 @@ class GuestController extends Controller
         
         return response()->json([
             "res" => true,
-            "titular" => $guest
+            "guest" => $guest
         ], 201);
     }
 
@@ -88,7 +88,7 @@ class GuestController extends Controller
     {
         try{
             DB::beginTransaction();
-            
+                
                 $this->GuestService->deleteGuest($asistencia_id);
             
             DB::commit();

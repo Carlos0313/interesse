@@ -15,7 +15,7 @@ const getEvents = () =>{
                     <td>${dateFormat(value.fecha_lanzamiento)}</td>
                     <td>${value.ubicacion}</td>
                     <td>${value.estado}</td>
-                    <td>0</td>
+                    <td>${value.asistentes}</td>
                     <td>
                         <div class="btn-group" role="group" aria-label="Default button group">
                             <button type="button" class="btn btn-outline-secondary" title="Participantes" onclick="changeContent('guest',${value.id}, '${value.nombre}')">
@@ -44,7 +44,6 @@ const getTitularesByEvent = (event_id) =>{
         resposeType:'json'
     }).then((res)=>{
 
-
         if(res.status == 200){
             let data = res.data.titulares;
             let dataTableEvents = document.getElementById('bodyT');
@@ -56,11 +55,12 @@ const getTitularesByEvent = (event_id) =>{
                 let tableSecundaria = '';
 
                 if(value.acompanantes.length > 0){
-                    tableSecundaria = `
-                        <div class="table-responsive tableSec collapse" id="collapseData${value.id}">
-                            <table class="table caption-top table-hover">
-                                <caption>Acompañantes</caption>
-                                <thead>
+
+                    tableSecundaria = 
+                    `<div class="table-responsive tableSec collapse" id="collapseData${value.id}">
+                        <table class="table caption-top table-hover">
+                            <caption>Acompañantes</caption>
+                            <thead>
                                 <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">Nombre Completo</th>
@@ -68,15 +68,28 @@ const getTitularesByEvent = (event_id) =>{
                                     <th scope="col">Telefono</th>
                                     <th scope="col">Acciones</th>
                                 </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td scope="col">1</td>
-                                        <td>Carlos Najera</td>
-                                        <td>carnave.cnv@gmail.com</td>
-                                        <td>5531427467</td>
-                                        <td>Acciones</td>
-                                    </tr>
+                            </thead>
+                            <tbody>`;
+                    value.acompanantes.forEach((val) => {
+                        tableSecundaria += `
+                            <tr>
+                                <td scope="col">${val.id}</td>
+                                <td>${val.nombre_completo ?? ""}</td>
+                                <td>${val.correo ?? ""}</td>
+                                <td>${val.telefono ?? ""}</td>
+                                <td>
+                                    <div class="btn-group" role="group" aria-label="Default button group">
+                                        <button type="button" class="btn btn-outline-primary" title="Editar" onclick="formEditGuest('${val.nombre}', '${val.apellidos}', '${val.correo}', '${val.telefono}', ${val.id}, ${event_id})">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-danger" title="Eliminar" onclick="deleteGuest(${val.asistencia_id}, ${event_id})">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>`;
+                    })
+                    tableSecundaria += `
                                 </tbody>
                             </table>
                         </div>`;
@@ -94,7 +107,7 @@ const getTitularesByEvent = (event_id) =>{
                                 <li>${value.qty_acompanantes}</li>
                                 <li style="z-index: 999;">
                                     <div class="btn-group" role="group" aria-label="Default button group">
-                                        <button type="button" class="btn btn-outline-secondary" title="Agregar Acompañantes" onclick="addGuests('formNewGuest', ${value.id})">
+                                        <button type="button" class="btn btn-outline-secondary" title="Agregar Acompañantes" onclick="addGuests('formNewGuest', ${value.id}, ${event_id})">
                                             <i class="fa-solid fa-user"></i>
                                         </button>
                                         <button type="button" class="btn btn-outline-secondary" title="Importar Excel" onclick="addMasiveGuests('formAddMassiveGuest', ${value.id})">
@@ -136,10 +149,6 @@ const useModal  = (option) =>{
     if(['formNewEvent', 'formNewTitular'].includes(option)){
         bodyModal = getForm(option)
     }
-
-    // if(['qr','guests'].includes(option)){
-    //     bodyModal = getModalBody(option, event_id,titular_id)
-    // }else i
 
     // Show Modal
     myModal.show()
@@ -244,6 +253,86 @@ const formEditTitular  = (nombre, apellidos, correo, telefono, titular_id, event
     modalBody.innerHTML = bodyForm;
 }
 
+const addGuests  = (option, titular_id, event_id) =>{
+    const myModal = new bootstrap.Modal(document.getElementById('staticBackdrop'))
+    const modalTitle = document.getElementById('staticBackdropLabel')
+    const modalBody = document.getElementById('modalBody')
+    let bodyForm = ''; 
+
+    // Options
+    modalTitle.innerHTML = getTitleModal(option);
+
+    bodyForm = 
+        `<div class="row g-3 needs-validation" novalidate id="frm_new_guest">
+            <div class="col-md-12">
+                <label for="nombre" class="form-label">Nombre</label>
+                <input type="text" class="form-control validation frm_new_guest_data" id="nombre" placeholder="Carlos" required>
+                <div class="invalid-feedback"> Agrega un Nombre</div>
+            </div>
+            <div class="col-md-12">
+                <label for="apellidos" class="form-label">Appellidos</label>
+                <input type="text" class="form-control frm_new_guest_data" placeholder="Najera" id="apellidos">
+            </div>
+            <div class="col-md-12">
+                <label for="correo" class="form-label">Correo</label>
+                <input type="text" class="form-control validation frm_new_guest_data" placeholder="ejemplo@ejemplo.com" id="correo" required>
+                <div class="invalid-feedback">Ingresa un Correo Valido</div>
+            </div>
+            <div class="col-md-12">
+                <label for="telefono" class="form-label">Telefono</label>
+                <input type="text" class="form-control frm_new_guest_data" placeholder="5512345678" id="telefono">
+            </div>
+            
+            <div class="col-12 d-flex justify-content-end align-items-center">
+                <button class="btn btn-success" onclick="createNewGuest('frm_new_guest', ${event_id}, ${titular_id})">Crear Acompañante</button>
+            </div>
+        </div>`;
+    
+    // Show Modal
+    myModal.show()
+    modalBody.innerHTML = bodyForm;
+}
+
+const formEditGuest  = (nombre, apellidos, correo, telefono, guest_id, evento_id) =>{
+    const myModal = new bootstrap.Modal(document.getElementById('staticBackdrop'))
+    const modalTitle = document.getElementById('staticBackdropLabel')
+    const modalBody = document.getElementById('modalBody')
+    let bodyForm = ''; 
+
+    // Options
+    modalTitle.innerHTML = getTitleModal('formEditGuest');
+
+    bodyForm = 
+        `<div class="row g-3 needs-validation" novalidate id="formEditGuest">
+            <div class="col-md-12">
+                <label for="nombre" class="form-label">Nombre</label>
+                <input type="text" class="form-control validation formEditGuest_data" id="nombre" value="${nombre}" placeholder="Carlos" required>
+                <div class="invalid-feedback"> Agrega un Nombre</div>
+            </div>
+            <div class="col-md-12">
+                <label for="apellidos" class="form-label">Appellidos</label>
+                <input type="text" class="form-control formEditGuest_data" placeholder="Najera" value="${apellidos}" id="apellidos">
+            </div>
+            <div class="col-md-12">
+                <label for="correo" class="form-label">Correo</label>
+                <input type="text" class="form-control validation formEditGuest_data" value="${correo}" placeholder="ejemplo@ejemplo.com" id="correo" required>
+                <div class="invalid-feedback">Ingresa un Correo Valido</div>
+            </div>
+            <div class="col-md-12">
+                <label for="telefono" class="form-label">Telefono</label>
+                <input type="text" class="form-control formEditGuest_data" value="${telefono}" placeholder="5512345678" id="telefono">
+            </div>
+            
+            <div class="col-12 d-flex justify-content-end align-items-center">
+                <button class="btn btn-success" onclick="editGuest('formEditGuest', ${guest_id}, ${evento_id})">Actualizar Acompañante</button>
+            </div>
+        </div>`;
+    
+    // Show Modal
+    myModal.show()
+    modalBody.innerHTML = bodyForm;
+}
+
 const getTitleModal = (option) =>{
     let title = '';
 
@@ -255,6 +344,9 @@ const getTitleModal = (option) =>{
         case 'formEditEvent': title = 'Editar Evento'; break;
         case 'formNewTitular': title = 'Nuevo Titular'; break;
         case 'formEditTitular': title = 'Editar Titular'; break;
+        case 'formNewGuest': title = 'Nuevo Acompañante'; break;
+        case 'formEditGuest': title = 'Editar Acompañante'; break;
+        
         default : title = 'Sin Contenido para mostrar'; break;
     }
 
@@ -338,7 +430,6 @@ const getForm = (option) =>{
                         <button class="btn btn-success" onclick="createNewTitular('frm_new_titular', ${eventSelected.value})">Crear Titular</button>
                     </div>
                 </div>`;
-        break;
 
         default : 
             bodyForm = 
@@ -618,6 +709,7 @@ const createNewGuest = (frm, event_id, titular_id) => {
         })
 
         data.evento_id = event_id;
+        data.titular_id = titular_id;
 
         // Se preparan los datos para el back
         axios.post("/api/guest/create", data, {
@@ -627,10 +719,10 @@ const createNewGuest = (frm, event_id, titular_id) => {
 
             if(res.status == 201){
                 modalActive.click();
-                let data = res.data.titular;
+                let data = res.data.guest;
 
                 Swal.fire({
-                    title: 'Titular Creado Corectamente!',
+                    title: 'Acompañante Creado Corectamente!',
                     text: '',
                     icon: 'success',
                     showConfirmButton: false,
@@ -644,6 +736,79 @@ const createNewGuest = (frm, event_id, titular_id) => {
     }
 }
 
+const editGuest = (frm, guest_id, evento_id) => {
+
+    if(validationEvents(frm)){
+        const form_data = document.querySelectorAll(`.${frm}_data`)
+        let data = {};
+
+        form_data.forEach(value => {
+            let llave = value.id
+            let valor = value.value
+            
+            data = {... data, [llave]:valor}
+        })
+
+        // Se preparan los datos para el back
+        axios.put("/api/guest/update/"+guest_id, data, {
+            resposeType:'json'
+        }).then((res)=>{
+            var modalActive = document.getElementById('closeModal')
+
+            if(res.status == 201){
+                modalActive.click();
+                let data = res.data.guest[0];
+
+                Swal.fire({
+                    title: 'Acompañante '+data.nombre+' Actualizado Corectamente!',
+                    text: '',
+                    icon: 'success',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+
+                getTitularesByEvent(evento_id)
+            }
+        })
+
+    }
+}
+
+const deleteGuest = (asistencia_id, event_id) =>{
+    Swal.fire({
+        title: 'Deseas Eliminar este Acompañante?',
+        text: "Se eliminara de este Evento!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#198754',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, Eliminar!',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+
+            axios.post("/api/guest/delete/"+asistencia_id, {
+                resposeType:'json',
+                _method: 'DELETE'
+            }).then((res)=>{
+                if(res.status == 200){
+                    let message = res.data.message;
+
+                    Swal.fire({
+                        title: 'Eliminado!',
+                        text: message,
+                        icon: 'success',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+
+                    getTitularesByEvent(event_id)
+                }
+            })
+
+        }
+      })
+}
 
 // #### Utils ####
 const validationEvents = (frm) => {

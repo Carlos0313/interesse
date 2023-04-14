@@ -44,17 +44,18 @@ class GuestService
         $correo = $data['correo'];
         $telefono = $data['telefono'];
 
-        $titular = DB::select('CALL actualizarGuest (?,?,?,?,?)', array("$nombre", "$apellidos", "$correo", "$telefono", $guest_id));
+        $guest = DB::select('CALL actualizarGuest (?,?,?,?,?)', array("$nombre", "$apellidos", "$correo", "$telefono", $guest_id));
 
-        if(is_null($titular)) throw new Exception("Error al Actualizar Titular", 500);
+        if(is_null($guest)) throw new Exception("Error al Actualizar Acompañante", 500);
 
-        return $titular;
+        return $guest;
     }
 
-    public function deleteGuest($asistencia_id){
-        $asistencia = Asistencia::where($asistencia_id);
+    public function deleteGuest(int $asistencia_id){
+        $asistencia = Asistencia::find($asistencia_id);
 
-        if($asistencia->count() <= 0) throw new Exception("No existe el Acompañante que intenta eliminar", 400);
+        if(is_null($asistencia)) throw new Exception("No existe el Acompañante que intenta eliminar", 400);
+        if($asistencia->es_activo != 1) throw new Exception("Este Acompañante ya ha sido removido de la lista", 400);
 
         $asistencia->update(['es_activo'=> 0]);
 

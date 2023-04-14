@@ -94,6 +94,24 @@ class PrincipalService
     }
 
     private function getGuestByEvent(int $event_id, int $principal_id){
-        return [];
+        $guests = DB::table('asistencia as a')
+        ->select(
+            "g.id", 
+            "g.nombre", 
+            "g.apellidos", 
+            DB::raw("CONCAT(g.nombre,' ',g.apellidos) as nombre_completo"), 
+            "g.correo", 
+            "g.telefono", 
+            "a.id as asistencia_id"
+        )        
+        ->join("guest as g", "g.id","=", "a.acompanante_id")
+        ->where('a.evento_id', $event_id)
+        ->where('a.titular_id', $principal_id)
+        ->where('a.es_activo', true)
+        ->where('g.es_activo', true)
+        ->where('a.acompanante_id','<>',NULL)
+        ->get();
+        
+        return $guests;
     }
 }
