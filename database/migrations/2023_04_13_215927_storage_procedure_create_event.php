@@ -49,7 +49,7 @@ class StorageProcedureCreateEvent extends Migration
      */
     public function down()
     {
-        $procedure = "DROP PROCEDURE IF EXISTS `get_availability_rooms`;";
+        $procedure = "DROP PROCEDURE IF EXISTS `insertarEventos`;";
         DB::unprepared($procedure);
     }
 }

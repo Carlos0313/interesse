@@ -8,17 +8,6 @@ use Illuminate\Support\Facades\DB;
 
 class EventService
 {
-    public function getProducts($data){
-
-        $productos = Event::where('activo',1)
-        ->Nombre($data['nombre'])
-        ->SKU($data['sku'])
-        ->Rango($data['rango']['min'], $data['rango']['max'])
-        ->orderBy('nombre', 'ASC')
-        ->get();
-        
-        return $productos;
-    }
 
     public function createEvent(array $data){
 
@@ -38,35 +27,16 @@ class EventService
         return $evento;
     }
 
-    public function updateProduct(array $data){
-        $producto = Event::find($data['product_id']);
+    public function deleteEvent($event_id){
+        $evento = Event::find($event_id);
 
-        if(is_null($producto)) throw new Exception("No existe el Producto que intenta actualizar", 400);
-        if($producto->activo != 1) throw new Exception("Este Producto ya ha sido removido de la lista", 400);
+        if(is_null($evento)) throw new Exception("No existe el Evento que intenta eliminar", 400);
+        if($evento->es_activo != 1) throw new Exception("Este Evento ya ha sido removido de la lista", 400);
 
-
-        $sku = $this->generateCode($data['nombre']);
-        $data['sku'] = $sku;
-
-        $producto->fill($data);
-        $producto->save();
-
-        if(is_null($producto)) throw new Exception("Error al Actualizar Producto", 500);
-
-        return $producto;
-    }
-
-    public function deleteProduct(int $product_id){
-        $producto = Event::find($product_id);
-
-        if(is_null($producto)) throw new Exception("No existe el Producto que intenta eliminar", 400);
-        if($producto->activo != 1) throw new Exception("Este Producto ya ha sido removido de la lista", 400);
-
-        $producto->update(['activo'=> 0]);
+        $evento->update(['es_activo'=> 0]);
 
         return true;
     }
-    
 
     // Private Funtions
     private function generateCode($nombre){

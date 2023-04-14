@@ -5,26 +5,26 @@ namespace App\Http\Controllers;
 use Throwable;
 use Exception;
 use Carbon\Carbon;
-use App\Services\EventService;
-use App\Http\Requests\NewEventRequest;
+use App\Services\PrincipalService;
+use App\Http\Requests\NewTitularRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class EventController extends Controller
+class PrincipalController extends Controller
 {
-    protected EventService $EventService;
+    protected PrincipalService $PrincipalService;
 
-    public function __construct(EventService $eventService)
+    public function __construct(PrincipalService $principalService)
     {
-        $this->EventService = $eventService;
+        $this->PrincipalService = $principalService;
     }
 
-    public function createEvent(NewEventRequest $request)
+    public function createTitular(NewTitularRequest $request):JsonResponse
     {
         try{
             DB::beginTransaction();
-                $evento = $this->EventService->createEvent($request->all());
+                $titular = $this->PrincipalService->createTitular($request->all());
             DB::commit();
         }catch(\Exception $e){
             DB::rollback();
@@ -48,17 +48,15 @@ class EventController extends Controller
         
         return response()->json([
             "res" => true,
-            "evento" => $evento
+            "evento" => $titular
         ], 201);
     }
 
-    public function deleteEvent($event_id):JsonResponse
+    public function associateEvent(Request $request):JsonResponse
     {
         try{
             DB::beginTransaction();
-            
-                $this->EventService->deleteEvent($event_id);
-            
+                $asociacion = $this->PrincipalService->associateEvent($request->event_id, $request->principal_id);
             DB::commit();
         }catch(\Exception $e){
             DB::rollback();
@@ -79,11 +77,10 @@ class EventController extends Controller
                 ], $code);
             }
         }
-
+        
         return response()->json([
             "res" => true,
-            "message" => "Evento Eliminado Correctamente"
-        ], 200);
+            "asociacion" => $asociacion
+        ], 201);
     }
 }
-

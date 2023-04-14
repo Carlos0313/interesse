@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\PrincipalController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,19 +21,16 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 // Eventos
-Route::get('/events/getAll', [EventController::class,'getEvent']);
 Route::post('/events/create', [EventController::class,'createEvent']);
 Route::post('/events/update/{event_id}', [EventController::class,'updateEvent']);
 Route::delete('/events/delete/{event_id}', [EventController::class,'deleteEvent']);
 
 // Titulares
-// Route::get('/events/getAll', [EventController::class,'getEvent']);
-// Route::post('/events/create', [ProductController::class,'createEvent']);
-// Route::post('/events/update/{event_id}', [ProductController::class,'updateEvent']);
-// Route::delete('/events/delete/{event_id}', [ProductController::class,'deleteEvent']);
+Route::post('/principal/create', [PrincipalController::class,'createTitular']);
+Route::post('/principal/update/{titular_id}', [PrincipalController::class,'updateTitular']);
+Route::delete('/principal/delete/{titular_id}', [PrincipalController::class,'deleteTitular']);
 
 // // Acompañantes
-// Route::get('/events/getAll', [EventController::class,'getEvent']);
-// Route::post('/events/create', [ProductController::class,'createEvent']);
-// Route::post('/events/update/{event_id}', [ProductController::class,'updateEvent']);
-// Route::delete('/events/delete/{event_id}', [ProductController::class,'deleteEvent']);
+Route::post('/guest/create', [ProductController::class,'createEvent']);
+Route::post('/guest/update/{guest_id}', [ProductController::class,'updateGuest']);
+Route::delete('/guest/delete/{guest_id}', [ProductController::class,'deleteGuest']);
