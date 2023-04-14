@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\PrincipalController;
+use App\Http\Controllers\GuestController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -33,7 +35,6 @@ Route::put('/principal/update/{titular_id}', [PrincipalController::class,'update
 Route::delete('/principal/delete/{event_id}/{titular_id}', [PrincipalController::class,'deleteTitular']);
 
 // Acompañantes
-Route::get('/guest/getAll', [EventController::class,'getAllGuests']);
-Route::post('/guest/create', [PrincipalController::class,'createGuest']);
-Route::post('/guest/update/{guest_id}', [PrincipalController::class,'updateGuest']);
-Route::delete('/guest/delete/{guest_id}', [PrincipalController::class,'deleteGuest']);
+Route::post('/guest/create', [GuestController::class,'createGuest']);
+Route::put('/guest/update/{guest_id}', [GuestController::class,'updateGuest']);
+Route::delete('/guest/delete/{asistencia_id}', [GuestController::class,'deleteGuest']);

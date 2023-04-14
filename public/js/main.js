@@ -620,7 +620,7 @@ const createNewGuest = (frm, event_id, titular_id) => {
         data.evento_id = event_id;
 
         // Se preparan los datos para el back
-        axios.post("/api/principal/create", data, {
+        axios.post("/api/guest/create", data, {
             resposeType:'json',
         }).then((res)=>{
             var modalActive = document.getElementById('closeModal')

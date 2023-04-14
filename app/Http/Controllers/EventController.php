@@ -52,7 +52,7 @@ class EventController extends Controller
         ], 200);
     }
 
-    public function createEvent(NewEventRequest $request)
+    public function createEvent(NewEventRequest $request):JsonResponse
     {
         try{
             DB::beginTransaction();
@@ -84,7 +84,7 @@ class EventController extends Controller
         ], 201);
     }
 
-    public function updateEvent(Request $request, $evento_id)
+    public function updateEvent(Request $request, $evento_id):JsonResponse
     {
         try{
             DB::beginTransaction();

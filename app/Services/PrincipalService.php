@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Principal;
 use App\Models\Asistencia;
+use App\Models\Guest;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
@@ -40,7 +41,7 @@ class PrincipalService
 
         // Se Consultan los Acompañantes
         foreach($titulares as $titular){
-            $titular->acompanantes = [];
+            $titular->acompanantes = $this->getGuestByEvent($event_id, $titular->id);
         }
 
         return $titulares;
@@ -92,4 +93,7 @@ class PrincipalService
         return $asociacion;
     }
 
+    private function getGuestByEvent(int $event_id, int $principal_id){
+        return [];
+    }
 }

@@ -84,7 +84,7 @@ class PrincipalController extends Controller
         ], 200);
     }
 
-    public function updateTitular(Request $request, $titular_id)
+    public function updateTitular(Request $request, $titular_id):JsonResponse
     {
         try{
             DB::beginTransaction();
