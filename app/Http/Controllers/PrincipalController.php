@@ -51,36 +51,4 @@ class PrincipalController extends Controller
             "evento" => $titular
         ], 201);
     }
-
-    public function associateEvent(Request $request):JsonResponse
-    {
-        try{
-            DB::beginTransaction();
-                $asociacion = $this->PrincipalService->associateEvent($request->event_id, $request->principal_id);
-            DB::commit();
-        }catch(\Exception $e){
-            DB::rollback();
-
-            $code = $e->getCode() == 0 ? 500 : $e->getCode();
-
-            if($code >= 500){
-                return response()->json([
-                    'res' => false,
-                    'message' => $e->getMessage(),
-                    'line' => $e->getLine(),
-                    'file' => $e->getFile()
-                ], $code);
-            }else{
-                return response()->json([
-                    'res' => false,
-                    'message' => $e->getMessage()
-                ], $code);
-            }
-        }
-        
-        return response()->json([
-            "res" => true,
-            "asociacion" => $asociacion
-        ], 201);
-    }
 }

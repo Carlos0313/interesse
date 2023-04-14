@@ -25,7 +25,7 @@ class StorageProcedureCreateTitular extends Migration
             )
             BEGIN
                 INSERT INTO principal (nombre, apellidos, correo, telefono) VALUES (nom,ape, email, phone);
-                SELECT nombre, apellidos, correo, telefono from principal order by id DESC Limit 1;
+                SELECT id,nombre, apellidos, correo, telefono from principal order by id DESC Limit 1;
             END";
 
         DB::unprepared($procedure);

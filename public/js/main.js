@@ -40,7 +40,7 @@ const getEvents = () =>{
 }
 
 // Modals
-const useModal  = (option, event_id = null, titular_id = null) =>{
+const useModal  = (option) =>{
     const myModal = new bootstrap.Modal(document.getElementById('staticBackdrop'))
     const modalTitle = document.getElementById('staticBackdropLabel')
     const modalBody = document.getElementById('modalBody')
@@ -50,11 +50,13 @@ const useModal  = (option, event_id = null, titular_id = null) =>{
     modalTitle.innerHTML = getTitleModal(option);
     
     // Create Body Modal
-    if(['qr','guests'].includes(option)){
-        bodyModal = getModalBody(option, event_id,titular_id)
-    }else if(['formNewEvent'].includes(option)){
+    if(['formNewEvent', 'formNewTitular'].includes(option)){
         bodyModal = getForm(option)
     }
+
+    // if(['qr','guests'].includes(option)){
+    //     bodyModal = getModalBody(option, event_id,titular_id)
+    // }else i
 
     // Show Modal
     myModal.show()
@@ -128,47 +130,14 @@ const getTitleModal = (option) =>{
         case 'guests': title = 'Acompañantes'; break;
         case 'formNewEvent': title = 'Nuevo Evento'; break;
         case 'formEditEvent': title = 'Editar Evento'; break;
+        case 'formNewTitular': title = 'Nuevo Titular'; break;
         default : title = 'Sin Contenido para mostrar'; break;
     }
 
     return title;
 } 
 
-const getModalBody = (option, event_id = null, titular_id = null ) =>{
-    let resultado = '';
-
-    if(option ==  'qr'){
-        resultado = getQRCode()
-    }else if (option == 'guests'){
-        resultado = getGuests(event_id,titular_id)
-    }else {
-        resultado = getForm(option)
-    }
-
-    return resultado;
-}
-
-const getQRCode = () =>{
-    let body = ``;
-
-    body = `<div class="card">
-                <div class="card-body">
-                    Aqui el codigo QR
-                </div>
-            </div>`;
-
-    return body;
-}
-
-const getDetailEvent = (event_id) =>{
-
-}
-
-const getGuests = (event_id, titular_id) =>{
-
-}
-
-const getForm = (option, obj) =>{
+const getForm = (option) =>{
     let bodyForm = '';
 
     switch(option){
@@ -218,6 +187,35 @@ const getForm = (option, obj) =>{
                 </div>`;
         break;
 
+        case 'formNewTitular': 
+            const eventSelected = document.getElementById('eventSelected')
+            bodyForm = 
+                `<div class="row g-3 needs-validation" novalidate id="frm_new_titular">
+                    <div class="col-md-12">
+                        <label for="nombre" class="form-label">Nombre</label>
+                        <input type="text" class="form-control validation frm_new_titular_data" id="nombre" placeholder="Carlos" required>
+                        <div class="invalid-feedback"> Agrega un Nombre</div>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="apellidos" class="form-label">Appellidos</label>
+                        <input type="text" class="form-control frm_new_titular_data" placeholder="Najera" id="apellidos">
+                    </div>
+                    <div class="col-md-12">
+                        <label for="correo" class="form-label">Correo</label>
+                        <input type="text" class="form-control validation frm_new_titular_data" placeholder="ejemplo@ejemplo.com" id="correo" required>
+                        <div class="invalid-feedback">Ingresa un Correo Valido</div>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="telefono" class="form-label">Telefono</label>
+                        <input type="text" class="form-control frm_new_titular_data" placeholder="5512345678" id="telefono">
+                    </div>
+                    
+                    <div class="col-12 d-flex justify-content-end align-items-center">
+                        <button class="btn btn-success" onclick="createNewTitular('frm_new_titular', ${eventSelected.value})">Crear Titular</button>
+                    </div>
+                </div>`;
+        break;
+
         default : 
             bodyForm = 
                 `<div class="card">
@@ -235,16 +233,17 @@ const changeContent = (option, id = null, name = null) =>{
     const eventsContent = document.getElementById('containerEventos')
     const guestsContent = document.getElementById('containerParticipantes')
     const titleEvent = document.getElementById('titleEvent')
+    const eventSelected = document.getElementById('eventSelected')
 
     if(option == 'guest'){
         eventsContent.style.display = 'none'
         guestsContent.style.display = 'block'
         titleEvent.innerHTML = name
+        eventSelected.value = id
     }else{
         eventsContent.style.display = 'block'
         guestsContent.style.display = 'none'
     }
-    console.log(id);
 }
 
 
@@ -359,6 +358,46 @@ const deleteEvent = (event_id) =>{
 
         }
       })
+}
+
+const createNewTitular = (frm, event_id) => {
+
+    if(validationEvents(frm)){
+        const form_data = document.querySelectorAll(`.${frm}_data`)
+        let data = {};
+
+        form_data.forEach(value => {
+            let llave = value.id
+            let valor = value.value
+            
+            data = {... data, [llave]:valor}
+        })
+
+        data.evento_id = event_id;
+
+        // Se preparan los datos para el back
+        console.log(data);
+        // axios.post("/api/events/create", data, {
+        //     resposeType:'json',
+        // }).then((res)=>{
+        //     var modalActive = document.getElementById('closeModal')
+
+        //     if(res.status == 201){
+        //         modalActive.click();
+        //         let data = res.data.evento[0];
+
+        //         Swal.fire({
+        //             title: 'Evento '+data.nombre+' Creado Corectamente!',
+        //             text: 'Codigo: '+data.codigo_evento,
+        //             icon: 'success',
+        //             confirmButtonColor: '#198754'
+        //         })
+
+        //         getEvents()
+        //     }
+        // })
+
+    }
 }
 
 

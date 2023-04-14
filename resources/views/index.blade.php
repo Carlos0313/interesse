@@ -62,10 +62,11 @@
                     <div class="h3" id="titleEvent"></div>
                 </div>
                 <div class="col-sm-4 col-md-4 col-lg-2 d-flex justify-content-start align-items-center">
-                    <button class="btn btn-outline-primary" onclick="changeContent('event')">
+                    <button class="btn btn-outline-primary" onclick="useModal('formNewTitular')">
                         <i class="fa-solid fa-user-plus"></i> Agregar Titular
                     </button>
                 </div>
+                <input type="hidden" value="" id="eventSelected">
             </div>
             <div class="table-responsive">
                 <table class="table caption-top table-hover">
