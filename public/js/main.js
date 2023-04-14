@@ -110,7 +110,7 @@ const getTitularesByEvent = (event_id) =>{
                                         <button type="button" class="btn btn-outline-secondary" title="Agregar Acompañantes" onclick="addGuests('formNewGuest', ${value.id}, ${event_id})">
                                             <i class="fa-solid fa-user"></i>
                                         </button>
-                                        <button type="button" class="btn btn-outline-secondary" title="Importar Excel" onclick="addMasiveGuests('formAddMassiveGuest', ${value.id})">
+                                        <button type="button" class="btn btn-outline-secondary" title="Importar Excel" onclick="modalUploadFile(${value.id}, ${event_id})">
                                             <i class="fa-solid fa-users"></i>
                                         </button>
                                         <button type="button" class="btn btn-outline-primary" title="Editar" onclick="formEditTitular('${value.nombre}', '${value.apellidos}', '${value.correo}', '${value.telefono}', ${value.id}, ${event_id})">
@@ -346,6 +346,7 @@ const getTitleModal = (option) =>{
         case 'formEditTitular': title = 'Editar Titular'; break;
         case 'formNewGuest': title = 'Nuevo Acompañante'; break;
         case 'formEditGuest': title = 'Editar Acompañante'; break;
+        case 'uploadFile': title = 'Subir Acompañantes Excel'; break;
         
         default : title = 'Sin Contenido para mostrar'; break;
     }
@@ -460,6 +461,26 @@ const changeContent = (option, id = null, name = null) =>{
         eventsContent.style.display = 'block'
         guestsContent.style.display = 'none'
     }
+}
+
+const modalUploadFile  = () =>{
+    const myModal = new bootstrap.Modal(document.getElementById('staticBackdrop'))
+    const modalTitle = document.getElementById('staticBackdropLabel')
+    const modalBody = document.getElementById('modalBody')
+    let bodyModal = ''; 
+
+    // Options
+    modalTitle.innerHTML = getTitleModal('uploadFile');
+    
+    // Create Body Modal
+    bodyModal = 
+    `<div class="row g-3 needs-validation" novalidate id="frm_new_guest">
+        algo
+    </div>`;
+
+    // Show Modal
+    myModal.show()
+    modalBody.innerHTML = bodyModal;
 }
 
 
