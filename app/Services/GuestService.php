@@ -63,7 +63,11 @@ class GuestService
     }
 
     public function importGuest($data){
-        return $data['file'];
+        foreach($data as $guest){
+            $this->createGuest($guest);
+        }
+
+        return true;
     }
 
     // Private function Zone

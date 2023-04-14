@@ -10,7 +10,7 @@ use App\Http\Requests\NewGuestRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
+use Excel;
 class GuestController extends Controller
 {
     protected GuestService $GuestService;
@@ -122,8 +122,27 @@ class GuestController extends Controller
     {
         try{
             DB::beginTransaction();
-                
-                $data = $this->GuestService->importGuest($request->all());
+                $importedData = [];
+                if($request->hasFile('file')){
+                    $path = $request->file('file')->getRealPath();
+                    $datos = Excel::toCollection(collect([]), $path);
+                }
+
+                if(!empty($datos) && $datos->count()){
+                    foreach($datos[0] as $key => $data){
+                        if($key == 0 )continue;
+                        $importedData [] = [
+                            "nombre" => $data[0],
+                            "apellidos" => $data[1],
+                            "correo" => $data[2],
+                            "telefono" => $data[3],
+                            "evento_id" => (int)$request->event_id,
+                            "titular_id" => (int)$request->titular_id
+                        ];
+                    }
+                }
+
+                $this->GuestService->importGuest($importedData);
             
             DB::commit();
         }catch(\Exception $e){
@@ -148,8 +167,7 @@ class GuestController extends Controller
 
         return response()->json([
             "res" => true,
-            "message" => "Archivo Cargado Correctamente",
-            "data" => $data
-        ], 200);
+            "message" => "Archivo Cargado Correctamente"
+        ], 201);
     }
 }

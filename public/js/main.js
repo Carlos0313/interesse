@@ -837,21 +837,24 @@ const deleteGuest = (asistencia_id, event_id) =>{
 const importExcel = (titular_id, event_id) =>{
     const file = document.getElementById('fileExcel');
     
-    data = {
-        titular_id:titular_id, 
-        event_id:event_id,
-        file:file.value
-    }
+    if(file.value.length <= 0) return false;
 
-    axios.post("/api/guest/import/",
-    data
-    ,{
-        resposeType:'json',
+    var formData = new FormData();
+
+    formData.append("titular_id", titular_id);
+    formData.append("event_id", event_id);
+    formData.append("file", file.files[0]);
+
+    axios.post("/api/guest/import/", formData,
+    {
         headers: {
-            'Content-type' : 'multipart/form-data'
-        },
+            'Content-Type': 'multipart/form-data'
+        }
     }).then((res)=>{
-        if(res.status == 200){
+        var modalActive = document.getElementById('closeModal')
+        
+        if(res.status == 201){
+            modalActive.click();
             let message = res.data.message;
 
             Swal.fire({
