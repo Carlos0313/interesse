@@ -48,7 +48,40 @@ class PrincipalController extends Controller
         
         return response()->json([
             "res" => true,
-            "evento" => $titular
+            "titular" => $titular
         ], 201);
     }
+
+    public function getAllTitulares(Request $request, $event_id):JsonResponse
+    {
+        try{
+            DB::beginTransaction();
+                $titulares = $this->PrincipalService->getAllTitulares($event_id);
+            DB::commit();
+        }catch(\Exception $e){
+            DB::rollback();
+
+            $code = $e->getCode() == 0 ? 500 : $e->getCode();
+
+            if($code >= 500){
+                return response()->json([
+                    'res' => false,
+                    'message' => $e->getMessage(),
+                    'line' => $e->getLine(),
+                    'file' => $e->getFile()
+                ], $code);
+            }else{
+                return response()->json([
+                    'res' => false,
+                    'message' => $e->getMessage()
+                ], $code);
+            }
+        }
+        
+        return response()->json([
+            "res" => true,
+            "titulares" => $titulares
+        ], 200);
+    }
+
 }

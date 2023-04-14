@@ -27,11 +27,13 @@ Route::put('/events/update/{event_id}', [EventController::class,'updateEvent']);
 Route::delete('/events/delete/{event_id}', [EventController::class,'deleteEvent']);
 
 // Titulares
+Route::get('/principal/getAll/{event_id}', [PrincipalController::class,'getAllTitulares']);
 Route::post('/principal/create', [PrincipalController::class,'createTitular']);
 Route::post('/principal/update/{titular_id}', [PrincipalController::class,'updateTitular']);
 Route::delete('/principal/delete/{titular_id}', [PrincipalController::class,'deleteTitular']);
 
-// // Acompañantes
-Route::post('/guest/create', [ProductController::class,'createEvent']);
-Route::post('/guest/update/{guest_id}', [ProductController::class,'updateGuest']);
-Route::delete('/guest/delete/{guest_id}', [ProductController::class,'deleteGuest']);
+// Acompañantes
+Route::get('/guest/getAll', [EventController::class,'getAllGuests']);
+Route::post('/guest/create', [PrincipalController::class,'createGuest']);
+Route::post('/guest/update/{guest_id}', [PrincipalController::class,'updateGuest']);
+Route::delete('/guest/delete/{guest_id}', [PrincipalController::class,'deleteGuest']);

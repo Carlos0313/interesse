@@ -39,6 +39,89 @@ const getEvents = () =>{
     })
 }
 
+const getTitularesByEvent = (event_id) =>{
+    axios.get("/api/principal/getAll/"+event_id, {
+        resposeType:'json'
+    }).then((res)=>{
+
+
+        if(res.status == 200){
+            let data = res.data.titulares;
+            let dataTableEvents = document.getElementById('bodyT');
+            let body = '';
+
+            if(data.length <= 0) body = '<div class="trT">Sin Datos</div>';
+
+            data.forEach((value) => {
+                let tableSecundaria = '';
+
+                if(value.acompanantes.length > 0){
+                    tableSecundaria = `
+                        <div class="table-responsive tableSec collapse" id="collapseData${value.id}">
+                            <table class="table caption-top table-hover">
+                                <caption>Acompañantes</caption>
+                                <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Nombre Completo</th>
+                                    <th scope="col">Correo</th>
+                                    <th scope="col">Telefono</th>
+                                    <th scope="col">Acciones</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td scope="col">1</td>
+                                        <td>Carlos Najera</td>
+                                        <td>carnave.cnv@gmail.com</td>
+                                        <td>5531427467</td>
+                                        <td>Acciones</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>`;
+                }
+
+
+                body +=
+                    `<div class="trT">
+                        <div class="pr">
+                            <ul>
+                                <li data-bs-toggle="collapse" href="#collapseData${value.id}" aria-expanded="false" aria-controls="collapseData${value.id}"><i class="fa-regular fa-square-plus"></i></li>
+                                <li>${value.nombre_completo}</li>
+                                <li>${value.correo}</li>
+                                <li>${value.telefono}</li>
+                                <li>${value.qty_acompanantes ?? 0}</li>
+                                <li style="z-index: 999;">
+                                    <div class="btn-group" role="group" aria-label="Default button group">
+                                        <button type="button" class="btn btn-outline-secondary" title="Agregar Acompañantes" onclick="addGuests('formNewGuest', ${value.id})">
+                                            <i class="fa-solid fa-user"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary" title="Importar Excel" onclick="addMasiveGuests('formAddMassiveGuest', ${value.id})">
+                                            <i class="fa-solid fa-users"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-primary" title="Editar" onclick="formEditTitular('formEditTitular', '${value.nombre}', '${value.apellidos}', '${value.correo}', '${value.telefono}')">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-danger" title="Eliminar" onclick="deleteTitular(${value.id})">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        ${tableSecundaria}
+                    </div>`;
+            })
+
+            dataTableEvents.innerHTML = body;
+            
+            loader(false)
+        }
+
+    });
+}
+
 // Modals
 const useModal  = (option) =>{
     const myModal = new bootstrap.Modal(document.getElementById('staticBackdrop'))
@@ -240,6 +323,7 @@ const changeContent = (option, id = null, name = null) =>{
         guestsContent.style.display = 'block'
         titleEvent.innerHTML = name
         eventSelected.value = id
+        getTitularesByEvent(id)
     }else{
         eventsContent.style.display = 'block'
         guestsContent.style.display = 'none'
@@ -277,7 +361,8 @@ const createNewEvent = (frm) => {
                     title: 'Evento '+data.nombre+' Creado Corectamente!',
                     text: 'Codigo: '+data.codigo_evento,
                     icon: 'success',
-                    confirmButtonColor: '#198754'
+                    showConfirmButton: false,
+                    timer: 1500
                 })
 
                 getEvents()
@@ -314,7 +399,8 @@ const EditNewEvent = (frm, event_id) => {
                     title: 'Evento '+data.nombre+' Actualizado Corectamente!',
                     text: 'Codigo: '+data.codigo_evento,
                     icon: 'success',
-                    confirmButtonColor: '#198754'
+                    showConfirmButton: false,
+                    timer: 1500
                 })
 
                 getEvents()
@@ -348,7 +434,8 @@ const deleteEvent = (event_id) =>{
                         title: 'Eliminado!',
                         text: message,
                         icon: 'success',
-                        confirmButtonColor: '#198754'
+                        showConfirmButton: false,
+                        timer: 1500
                     })
 
                     getEvents()
@@ -376,26 +463,26 @@ const createNewTitular = (frm, event_id) => {
         data.evento_id = event_id;
 
         // Se preparan los datos para el back
-        console.log(data);
-        // axios.post("/api/events/create", data, {
-        //     resposeType:'json',
-        // }).then((res)=>{
-        //     var modalActive = document.getElementById('closeModal')
+        axios.post("/api/principal/create", data, {
+            resposeType:'json',
+        }).then((res)=>{
+            var modalActive = document.getElementById('closeModal')
 
-        //     if(res.status == 201){
-        //         modalActive.click();
-        //         let data = res.data.evento[0];
+            if(res.status == 201){
+                modalActive.click();
+                let data = res.data.titular;
 
-        //         Swal.fire({
-        //             title: 'Evento '+data.nombre+' Creado Corectamente!',
-        //             text: 'Codigo: '+data.codigo_evento,
-        //             icon: 'success',
-        //             confirmButtonColor: '#198754'
-        //         })
+                Swal.fire({
+                    title: 'Titular Creado Corectamente!',
+                    text: '',
+                    icon: 'success',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
 
-        //         getEvents()
-        //     }
-        // })
+                getTitularesByEvent(event_id)
+            }
+        })
 
     }
 }

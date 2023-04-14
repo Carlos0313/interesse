@@ -69,24 +69,22 @@
                 <input type="hidden" value="" id="eventSelected">
             </div>
             <div class="table-responsive">
-                <table class="table caption-top table-hover">
+                <div class="tableCustom">
                     <caption>Titulares</caption>
-                    <thead>
-                      <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Nombre Completo</th>
-                        <th scope="col">Correo</th>
-                        <th scope="col">Telefono</th>
-                        <th scope="col">Cant. Acompañantes</th>
-                        <th scope="col">Acciones</th>
-                      </tr>
-                    </thead>
-                    <tbody id="dataTableGuestPrincipal">
-                        <tr>
-                            <th scope="row" class="text-center" colspan="8"> Sin Datos</th>
-                          </tr>
-                    </tbody>
-                </table>
+                    <div class="headT">
+                        <ul>
+                            <li>#</li>
+                            <li>Nombre Completo</li>
+                            <li>Correo</li>
+                            <li>Telefono</li>
+                            <li>Cant. Acompañantes</li>
+                            <li>Acciones</li>
+                        </ul>
+                    </div>
+                    <div class="bodyT" id="bodyT">
+                        Sin datos
+                    </div>
+                </div>
               </div>
         </div>
     </div>

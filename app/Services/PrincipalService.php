@@ -23,15 +23,29 @@ class PrincipalService
             $titular = $exist->first();
             $this->associateEvent($evento_id, $titular->id);
         }else{
-            $titular = DB::select('CALL insertarPrincipal (?,?,?,?,?,?)', array("$nombre", "$apellidos", "$correo", "$telefono"));
-
+            $titular = DB::select('CALL insertarPrincipal (?,?,?,?)', array("$nombre", "$apellidos", "$correo", "$telefono"));
+            
             if(is_null($titular)) throw new Exception("Error al Crear Titular", 500);
 
-            $this->associateEvent($evento_id, $titular[0]['id']);
+            $this->associateEvent($evento_id, $titular[0]->id);
+
+            $titular = $titular[0];
         }
         
         return $titular;
     }
+
+    public function getAllTitulares($event_id){
+        $titulares = DB::select('CALL obtenerTitulares (?)', array($event_id));
+
+        // Se Consultan los Acompañantes
+        foreach($titulares as $titular){
+            $titular->acompanantes = [];
+        }
+
+        return $titulares;
+    }
+    
 
     // Private function Zone
     private function associateEvent(int $event_id, int $principal_id){

@@ -3,7 +3,6 @@
   display: none;
 }
 
-
 /* Loading */
 .loading{
     width: 100%;
@@ -59,4 +58,49 @@
     100% {
       transform: rotate(360deg);
     }
+}
+
+/* tableCustom */
+.tableCustom{
+  width: 100%;
+  padding: 10px;
+}
+
+.headT, .bodyT, .trT{
+  width: 100%;
+  text-align: center;
+}
+
+.headT ul, .pr ul{
+  padding: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  list-style: none;
+  border-bottom: 1px solid #eee;
+}
+
+.pr ul{
+  background-color: #f2f5ff;
+  padding: 5px 0;
+}
+
+.headT ul{
+  font-weight: bold;
+}
+
+.headT ul li, .pr ul li{
+  text-align: center;
+  max-width: 180px;
+  flex-grow: 1; 
+  margin: 2px;
+}
+
+.headT ul li:first-child, 
+.pr ul li:first-child{
+  width: 80px;
+}
+
+.pr ul li:first-child{
+  cursor: pointer;
 }
