@@ -38,3 +38,4 @@ Route::delete('/principal/delete/{event_id}/{titular_id}', [PrincipalController:
 Route::post('/guest/create', [GuestController::class,'createGuest']);
 Route::put('/guest/update/{guest_id}', [GuestController::class,'updateGuest']);
 Route::delete('/guest/delete/{asistencia_id}', [GuestController::class,'deleteGuest']);
+Route::post('/guest/import', [GuestController::class,'importGuest']);

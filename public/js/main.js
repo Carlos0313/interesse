@@ -463,7 +463,7 @@ const changeContent = (option, id = null, name = null) =>{
     }
 }
 
-const modalUploadFile  = () =>{
+const modalUploadFile  = (titular_id, event_id) =>{
     const myModal = new bootstrap.Modal(document.getElementById('staticBackdrop'))
     const modalTitle = document.getElementById('staticBackdropLabel')
     const modalBody = document.getElementById('modalBody')
@@ -474,8 +474,11 @@ const modalUploadFile  = () =>{
     
     // Create Body Modal
     bodyModal = 
-    `<div class="row g-3 needs-validation" novalidate id="frm_new_guest">
-        algo
+    `<div class="row g-3 justify-content-center align-items-center" id="frm_upload_data">
+        <div class="col-md-10 justify-content-center align-items-center">
+            <input type="file" name="file" id="fileExcel" class="form-control"  accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+            <button class="btn btn-success mt-2" onclick="importExcel(${titular_id},${event_id})">Importar Acompañantes</button>
+        </div>
     </div>`;
 
     // Show Modal
@@ -829,6 +832,39 @@ const deleteGuest = (asistencia_id, event_id) =>{
 
         }
       })
+}
+
+const importExcel = (titular_id, event_id) =>{
+    const file = document.getElementById('fileExcel');
+    
+    data = {
+        titular_id:titular_id, 
+        event_id:event_id,
+        file:file.value
+    }
+
+    axios.post("/api/guest/import/",
+    data
+    ,{
+        resposeType:'json',
+        headers: {
+            'Content-type' : 'multipart/form-data'
+        },
+    }).then((res)=>{
+        if(res.status == 200){
+            let message = res.data.message;
+
+            Swal.fire({
+                title: 'Cargado Correctamente!',
+                text: message,
+                icon: 'success',
+                showConfirmButton: false,
+                timer: 1500
+            })
+
+            getTitularesByEvent(event_id)
+        }
+    })
 }
 
 // #### Utils ####

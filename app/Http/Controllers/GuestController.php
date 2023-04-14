@@ -117,4 +117,39 @@ class GuestController extends Controller
             "message" => "Acompañante Eliminado Correctamente"
         ], 200);
     }
+
+    public function importGuest(Request $request):JsonResponse
+    {
+        try{
+            DB::beginTransaction();
+                
+                $data = $this->GuestService->importGuest($request->all());
+            
+            DB::commit();
+        }catch(\Exception $e){
+            DB::rollback();
+
+            $code = $e->getCode() == 0 ? 500 : $e->getCode();
+
+            if($code >= 500){
+                return response()->json([
+                    'res' => false,
+                    'message' => $e->getMessage(),
+                    'line' => $e->getLine(),
+                    'file' => $e->getFile()
+                ], $code);
+            }else{
+                return response()->json([
+                    'res' => false,
+                    'message' => $e->getMessage()
+                ], $code);
+            }
+        }
+
+        return response()->json([
+            "res" => true,
+            "message" => "Archivo Cargado Correctamente",
+            "data" => $data
+        ], 200);
+    }
 }

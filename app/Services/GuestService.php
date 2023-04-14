@@ -62,6 +62,10 @@ class GuestService
         return true;
     }
 
+    public function importGuest($data){
+        return $data['file'];
+    }
+
     // Private function Zone
     private function associateEventTitular(int $event_id, int $principal_id, int $guest_id){
         $asistencia = Asistencia::where([
