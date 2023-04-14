@@ -46,6 +46,37 @@ class PrincipalService
         return $titulares;
     }
     
+    public function updateTitular(array $data, int $titular_id){
+
+        $nombre = $data['nombre'];
+        $apellidos = $data['apellidos'];
+        $correo = $data['correo'];
+        $telefono = $data['telefono'];
+
+        $titular = DB::select('CALL actualizarPrincipal (?,?,?,?,?)', array("$nombre", "$apellidos", "$correo", "$telefono", $titular_id));
+
+        if(is_null($titular)) throw new Exception("Error al Actualizar Titular", 500);
+
+        return $titular;
+    }
+
+    public function deleteTitular($event_id, $titular_id){
+        $asistencia = Asistencia::where([
+            ['evento_id', '=', $event_id],
+            ['titular_id','=', $titular_id]
+        ]);
+
+        if($asistencia->count() <= 0) throw new Exception("No existe la Asistencia que intenta eliminar", 400);
+
+        $asistencia = $asistencia->get();
+
+        foreach($asistencia as $guest){
+            $asiste = Asistencia::find($guest->id);
+            $asiste->update(['es_activo'=> 0]);
+        }
+
+        return true;
+    }
 
     // Private function Zone
     private function associateEvent(int $event_id, int $principal_id){

@@ -19,7 +19,6 @@ class CreatePrincipalTable extends Migration
             $table->string('apellidos', 100)->nullable();
             $table->string('correo', 40)->nullable();
             $table->string('telefono', 20)->nullable();
-            $table->integer('qty_acompanantes')->nullable();
             $table->boolean('es_activo')->default(true);
             $table->timestamps();
         });

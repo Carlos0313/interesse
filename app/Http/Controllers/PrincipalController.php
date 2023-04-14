@@ -52,7 +52,7 @@ class PrincipalController extends Controller
         ], 201);
     }
 
-    public function getAllTitulares(Request $request, $event_id):JsonResponse
+    public function getAllTitulares($event_id):JsonResponse
     {
         try{
             DB::beginTransaction();
@@ -81,6 +81,72 @@ class PrincipalController extends Controller
         return response()->json([
             "res" => true,
             "titulares" => $titulares
+        ], 200);
+    }
+
+    public function updateTitular(Request $request, $titular_id)
+    {
+        try{
+            DB::beginTransaction();
+                $titular = $this->PrincipalService->updateTitular($request->all(), $titular_id);
+            DB::commit();
+        }catch(\Exception $e){
+            DB::rollback();
+
+            $code = $e->getCode() == 0 ? 500 : $e->getCode();
+
+            if($code >= 500){
+                return response()->json([
+                    'res' => false,
+                    'message' => $e->getMessage(),
+                    'line' => $e->getLine(),
+                    'file' => $e->getFile()
+                ], $code);
+            }else{
+                return response()->json([
+                    'res' => false,
+                    'message' => $e->getMessage()
+                ], $code);
+            }
+        }
+        
+        return response()->json([
+            "res" => true,
+            "titular" => $titular
+        ], 201);
+    }
+
+    public function deleteTitular($event_id, $titular_id):JsonResponse
+    {
+        try{
+            DB::beginTransaction();
+            
+                $this->PrincipalService->deleteTitular($event_id, $titular_id);
+            
+            DB::commit();
+        }catch(\Exception $e){
+            DB::rollback();
+
+            $code = $e->getCode() == 0 ? 500 : $e->getCode();
+
+            if($code >= 500){
+                return response()->json([
+                    'res' => false,
+                    'message' => $e->getMessage(),
+                    'line' => $e->getLine(),
+                    'file' => $e->getFile()
+                ], $code);
+            }else{
+                return response()->json([
+                    'res' => false,
+                    'message' => $e->getMessage()
+                ], $code);
+            }
+        }
+
+        return response()->json([
+            "res" => true,
+            "message" => "Titular Eliminado Correctamente"
         ], 200);
     }
 

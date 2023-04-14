@@ -19,6 +19,7 @@ class CreateAsistenciaTable extends Migration
             $table->unsignedBigInteger('titular_id')->nullable();
             $table->unsignedBigInteger('acompanante_id')->nullable();
             $table->boolean('asiste')->default(false);
+            $table->boolean('es_activo')->default(true);
             $table->timestamps();
 
             $table->foreign('evento_id')->references('id')->on('event');

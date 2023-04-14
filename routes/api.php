@@ -29,8 +29,8 @@ Route::delete('/events/delete/{event_id}', [EventController::class,'deleteEvent'
 // Titulares
 Route::get('/principal/getAll/{event_id}', [PrincipalController::class,'getAllTitulares']);
 Route::post('/principal/create', [PrincipalController::class,'createTitular']);
-Route::post('/principal/update/{titular_id}', [PrincipalController::class,'updateTitular']);
-Route::delete('/principal/delete/{titular_id}', [PrincipalController::class,'deleteTitular']);
+Route::put('/principal/update/{titular_id}', [PrincipalController::class,'updateTitular']);
+Route::delete('/principal/delete/{event_id}/{titular_id}', [PrincipalController::class,'deleteTitular']);
 
 // Acompañantes
 Route::get('/guest/getAll', [EventController::class,'getAllGuests']);

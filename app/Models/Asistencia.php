@@ -16,5 +16,6 @@ class Asistencia extends Model
         "titular_id",
         "acompanante_id",
         "asiste",
+        "es_activo"
     ];
 }

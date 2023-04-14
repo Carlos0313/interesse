@@ -16,7 +16,6 @@ class Principal extends Model
         'apellidos',
         'correo',
         'telefono',
-        'qty_acompanantes',
         'es_activo',
     ];
 }
