@@ -15,6 +15,7 @@
 - Correr el comando npm install
 - Correr migraciones con el comando php artisan migrate
 - Finalemnete levantar el servidor con el comando php artisan serve
+* Copiar las variables de entorno con el siguiente comando copy .env.exmaple .env
 
 Nota: En el correo agrego Archivo SQL y coleccion de Postman.
 
