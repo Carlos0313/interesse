@@ -9,6 +9,12 @@ use Illuminate\Support\Facades\DB;
 class EventService
 {
 
+    public function getAllEvents(){
+        $eventos = DB::select('CALL obtenerEventos');
+
+        return $eventos;
+    }
+
     public function createEvent(array $data){
 
         $code = $this->generateCode($data['nameEvent']);
@@ -23,6 +29,24 @@ class EventService
         $evento = DB::select('CALL insertarEventos (?,?,?,?,?,?)', array("$codigo_evento", "$nombre", "$detalle", "$ubicacion", "$fecha_lanzamiento", "$estado"));
 
         if(is_null($evento)) throw new Exception("Error al Crear Evento", 500);
+
+        return $evento;
+    }
+
+    public function updateEvent(array $data, int $evento_id){
+
+        $code = $this->generateCode($data['nameEvent']);
+
+        $codigo_evento = $code;
+        $nombre = $data['nameEvent'];
+        $detalle = $data['descriptionEvent'];
+        $ubicacion = $data['ubication'];
+        $fecha_lanzamiento = $data['date'];
+        $estado = $data['state'];
+
+        $evento = DB::select('CALL actualizarEvento (?,?,?,?,?,?,?)', array("$codigo_evento", "$nombre", "$detalle", "$ubicacion", "$fecha_lanzamiento", "$estado", $evento_id));
+
+        if(is_null($evento)) throw new Exception("Error al Actualizar Evento", 500);
 
         return $evento;
     }

@@ -9,13 +9,14 @@
     <script src="{{ asset('js/app.js') }}" defer></script>
     <!-- Styles Bootstrp-->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/main.css') }}" rel="stylesheet">
     {{-- Icons --}}
     <script src="https://kit.fontawesome.com/b3d3d5c8e5.js" crossorigin="anonymous"></script>
 
     <title>Eventos</title>
 </head>
 <body>
-    <div class="container p-4">
+    <div class="container p-4" >
         <div class="row">
             <div class="col-sm-12 col-md-8 col-lg-10">
                 <div class="h1">Control de Eventos</div>
@@ -25,7 +26,8 @@
             </div>
             <hr class="border border-secondary border-1 opacity-50">
         </div>
-        <div>
+
+        <div id="containerEventos">
             <div class="table-responsive">
                 <table class="table caption-top table-hover">
                     <caption>Eventos Recientes</caption>
@@ -34,72 +36,54 @@
                         <th scope="col">Codigo Evento</th>
                         <th scope="col">Evento</th>
                         <th scope="col">Fecha Evento</th>
-                        <th scope="col">Titular</th>
-                        <th scope="col">No. Acompañantes</th>
+                        <th scope="col">Ubicacion</th>
+                        <th scope="col">Estado</th>
+                        <th scope="col">Cant. Asistentes</th>
                         <th scope="col">Acciones</th>
                       </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="dataTableEvents">
+                        <tr>
+                            <th scope="row" class="text-center" colspan="8"> Sin Datos</th>
+                          </tr>
+                    </tbody>
+                </table>
+              </div>
+        </div>
+
+        <div id="containerParticipantes">
+            <div class="row">
+                <div class="col-sm-2 col-md-2 col-lg-1 d-flex justify-content-start align-items-center">
+                    <button class="btn btn-outline-Secondary" onclick="changeContent('event')">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+                </div>
+                <div class="col-sm-6 col-md-6 col-lg-9 d-flex justify-content-start align-items-center">
+                    <div class="h3" id="titleEvent"></div>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-2 d-flex justify-content-start align-items-center">
+                    <button class="btn btn-outline-primary" onclick="changeContent('event')">
+                        <i class="fa-solid fa-user-plus"></i> Agregar Titular
+                    </button>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table caption-top table-hover">
+                    <caption>Titulares</caption>
+                    <thead>
                       <tr>
-                        <th scope="row">Eve-123tal</th>
-                        <td>Corona Capital</td>
-                        <td>23 de Marzo de 2023, 11:00 hrs.</td>
-                        <td>Cristina Valle</td>
-                        <td>12</td>
-                        <td>
-                            <div class="btn-group" role="group" aria-label="Default button group">
-                                <button type="button" class="btn btn-outline-secondary" title="Codigo QR" onclick="useModal('qr')">
-                                    <i class="fa-solid fa-qrcode"></i>
-                                </button>
-                                <button type="button" class="btn btn-outline-secondary" title="Detalles Eventos" onclick="useModal('event',1)">
-                                    <i class="fa-solid fa-calendar-days"></i>
-                                </button>
-                                <button type="button" class="btn btn-outline-secondary" title="Participantes" onclick="useModal('guests',1,1)">
-                                    <i class="fa-solid fa-users"></i>
-                                </button>
-                            </div>
-                        </td>
+                        <th scope="col">#</th>
+                        <th scope="col">Nombre Completo</th>
+                        <th scope="col">Correo</th>
+                        <th scope="col">Telefono</th>
+                        <th scope="col">Cant. Acompañantes</th>
+                        <th scope="col">Acciones</th>
                       </tr>
-                      <tr>
-                        <th scope="row">Eve-456ica</th>
-                        <td>Orquesta Filarmonica</td>
-                        <td>12 de Abril de 2023, 20:00 hrs.</td>
-                        <td>Aranza Marquez</td>
-                        <td>3</td>
-                        <td>
-                            <div class="btn-group" role="group" aria-label="Default button group">
-                                <button type="button" class="btn btn-outline-secondary" title="Codigo QR" onclick="useModal('qr')">
-                                    <i class="fa-solid fa-qrcode"></i>
-                                </button>
-                                <button type="button" class="btn btn-outline-secondary" title="Detalles Eventos" onclick="useModal('event',2)">
-                                    <i class="fa-solid fa-calendar-days"></i>
-                                </button>
-                                <button type="button" class="btn btn-outline-secondary" title="Participantes" onclick="useModal('guests',2,2)">
-                                    <i class="fa-solid fa-users"></i>
-                                </button>
-                            </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <th scope="row">Eve-789vas</th>
-                        <td>America vs Chivas</td>
-                        <td>25 de Abril de 2023, 13:00 hrs.</td>
-                        <td>Victor Sanchez</td>
-                        <td>21</td>
-                        <td>
-                            <div class="btn-group" role="group" aria-label="Default button group">
-                                <button type="button" class="btn btn-outline-secondary" title="Codigo QR" onclick="useModal('qr')">
-                                    <i class="fa-solid fa-qrcode"></i>
-                                </button>
-                                <button type="button" class="btn btn-outline-secondary" title="Detalles Eventos" onclick="useModal('event', 3)">
-                                    <i class="fa-solid fa-calendar-days"></i>
-                                </button>
-                                <button type="button" class="btn btn-outline-secondary" title="Participantes" onclick="useModal('guests', 3, 3)">
-                                    <i class="fa-solid fa-users"></i>
-                                </button>
-                            </div>
-                        </td>
-                      </tr>
+                    </thead>
+                    <tbody id="dataTableGuestPrincipal">
+                        <tr>
+                            <th scope="row" class="text-center" colspan="8"> Sin Datos</th>
+                          </tr>
                     </tbody>
                 </table>
               </div>
@@ -112,7 +96,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="staticBackdropLabel">Titulo Modal</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="closeModal"></button>
                 </div>
                 <div class="modal-body" id="modalBody">
                     
@@ -125,6 +109,9 @@
         </div>
     </div>
 
+    <div class="loading" id="loading">
+        <span class="loader"></span>
+    </div>
 
     {{-- Custom --}}
     <script src="{{ asset('js/main.js') }}"></script>

@@ -21,8 +21,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 // Eventos
+Route::get('/events/getAll', [EventController::class,'getAllEvents']);
 Route::post('/events/create', [EventController::class,'createEvent']);
-Route::post('/events/update/{event_id}', [EventController::class,'updateEvent']);
+Route::put('/events/update/{event_id}', [EventController::class,'updateEvent']);
 Route::delete('/events/delete/{event_id}', [EventController::class,'deleteEvent']);
 
 // Titulares

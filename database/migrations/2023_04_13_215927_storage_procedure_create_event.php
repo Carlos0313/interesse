@@ -35,7 +35,7 @@ class StorageProcedureCreateEvent extends Migration
                     fecha,
                     est
                 );
-                
+                SELECT codigo_evento, nombre, detalle, ubicacion, fecha_lanzamiento, estado from event order by id DESC Limit 1;
             END";
 
         DB::unprepared($procedure);

@@ -20,11 +20,75 @@ class EventController extends Controller
         $this->EventService = $eventService;
     }
 
+    public function getAllEvents(Request $request):JsonResponse
+    {
+        try{
+            DB::beginTransaction();
+                $eventos = $this->EventService->getAllEvents();
+            DB::commit();
+        }catch(\Exception $e){
+            DB::rollback();
+
+            $code = $e->getCode() == 0 ? 500 : $e->getCode();
+
+            if($code >= 500){
+                return response()->json([
+                    'res' => false,
+                    'message' => $e->getMessage(),
+                    'line' => $e->getLine(),
+                    'file' => $e->getFile()
+                ], $code);
+            }else{
+                return response()->json([
+                    'res' => false,
+                    'message' => $e->getMessage()
+                ], $code);
+            }
+        }
+        
+        return response()->json([
+            "res" => true,
+            "eventos" => $eventos
+        ], 200);
+    }
+
     public function createEvent(NewEventRequest $request)
     {
         try{
             DB::beginTransaction();
                 $evento = $this->EventService->createEvent($request->all());
+            DB::commit();
+        }catch(\Exception $e){
+            DB::rollback();
+
+            $code = $e->getCode() == 0 ? 500 : $e->getCode();
+
+            if($code >= 500){
+                return response()->json([
+                    'res' => false,
+                    'message' => $e->getMessage(),
+                    'line' => $e->getLine(),
+                    'file' => $e->getFile()
+                ], $code);
+            }else{
+                return response()->json([
+                    'res' => false,
+                    'message' => $e->getMessage()
+                ], $code);
+            }
+        }
+        
+        return response()->json([
+            "res" => true,
+            "evento" => $evento
+        ], 201);
+    }
+
+    public function updateEvent(Request $request, $evento_id)
+    {
+        try{
+            DB::beginTransaction();
+                $evento = $this->EventService->updateEvent($request->all(), $evento_id);
             DB::commit();
         }catch(\Exception $e){
             DB::rollback();
